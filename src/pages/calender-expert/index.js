@@ -81,7 +81,7 @@ const CalenderExpert = () => {
                             </span>
                             <div className="col-10 scrollmenu pb-1 mx-1 d-flex align-items-center">
                                 {numberRange(start, start + 6).map((day, key) => // selectDay === day
-                                    <button key={key} className={`btn col mx-1 ${(JSON.stringify(selectDay) === JSON.stringify(dateWeek(day))) ? ' btn-dark  px-5 active' : ' btn-outline-secondary '}`} onClick={onSelectDay(day)}>
+                                    <button key={key} className={`btn col mx-1 ${(JSON.stringify(selectDay) === JSON.stringify(dateWeek(day))) ? ' btn-primary  px-5 active' : ' btn-outline-secondary '}`} onClick={onSelectDay(day)}>
                                         {dayWeek[dateWeek(day)['dayweek']]}
                                         <br />
                                         {`${dateWeek(day)['year']}-${dateWeek(day)['month']}-${dateWeek(day)['day']}`}
@@ -110,7 +110,7 @@ const CalenderExpert = () => {
                                         {numberRange(8, 23).map((day, key) => // selectDay === day
                                             <div key={key} className="col-3 d-grid">
 
-                                                <button className={`btn my-2 btn-block  ${selectTimes.includes(converetDate(day)) ? 'btn-danger' : 'btn-outline-danger'}`} onClick={onSelectTimes(converetDate(day))}>
+                                                <button className={`btn my-2 btn-block  ${selectTimes.includes(converetDate(day)) ? 'btn-dark' : 'btn-outline-dark'}`} onClick={onSelectTimes(converetDate(day))}>
                                                     <span className="fw-bold">{day}-{day + 1}</span>
                                                     <br />
                                                     <small className={`${selectTimes.includes(converetDate(day)) ? '' : 'text-muted'}" small"`}>
