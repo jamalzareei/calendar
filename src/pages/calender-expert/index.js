@@ -62,8 +62,6 @@ const CalenderExpert = () => {
         return `${selectDay['year']}-${selectDay['month']}-${selectDay['day']} ${day}:00:00`
     }
 
-
-
     return (
         <div>
             <div className="row">
