@@ -21,6 +21,11 @@ const Header = () => {
               Calendar Sell
             </Link>
           </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/calendar-expert-v2">
+              Calendar Sell v2
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>

@@ -18,36 +18,6 @@ body {
     background: #242323;
 }
 
-div.scrollmenu {
-    overflow: auto;
-    white-space: nowrap;
-    position: relative;
-}
-
-@keyframes animatelefthand {
-    0% {
-        right: 7%;
-        opacity: 1;
-    }
-    100% {
-        right: 15%;
-        opacity: 0;
-    }
-}
-
-@media (min-width: 768px) {
-    span.help-scroll-user {
-        display: none;
-    }
-}
-
-@media (max-width: 1200px) {
-    span.help-scroll-user {
-        position: absolute;
-        display: block;
-        top: -25px;
-        right: 35%;
-        -webkit-animation: animatelefthand 2.2s infinite;
-        animation: animatelefthand 2.2s infinite;
-    }
+.smallest {
+    font-size: 0.7em;
 }

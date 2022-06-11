@@ -41,9 +41,9 @@ const CalenderExpert = () => {
 
     const changeWeek = (week, level) => (e) => {
         if (level === 'next') {
-            setStart(week + 7);
+            setStart(week + 1);
         } else {
-            setStart(week - 7);
+            setStart(week - 1);
         }
     }
 
@@ -97,23 +97,22 @@ const CalenderExpert = () => {
 
                     <div className="row ">
 
-                        <div className="col-1">
-                        </div>
-                        {console.log(selectTimes)}
-                        <div className="col-10">
+                        {/* <div className="col-1">
+                        </div> */}
+                        <div className="col-10 offset-1">
                             <div className="card my-4 ">
-                                <h5 className="card-header bg-secondary  text-white">Select time free</h5>
+                                <h5 className="card-header bg-secondary  text-white">Select unreserved times</h5>
                                 <div className="card-body">
                                     <div className="row">
                                         {numberRange(8, 23).map((day, key) => // selectDay === day
-                                            <div key={key} className="col-3 d-grid">
+                                            <div key={key} className="col-md-3 col-sm-4 d-grid">
 
                                                 <button className={`btn my-2 btn-block  ${selectTimes.includes(converetDate(day)) ? 'btn-dark' : 'btn-outline-dark'}`} onClick={onSelectTimes(converetDate(day))}>
-                                                    <span className="fw-bold">{day}-{day + 1}</span>
-                                                    <br />
-                                                    <small className={`${selectTimes.includes(converetDate(day)) ? '' : 'text-muted'}" small"`}>
+                                                    <div className="fw-bold">{day}-{day + 1}</div>
+                                                    
+                                                    <div className={`${selectTimes.includes(converetDate(day)) ? '' : 'text-muted'}" small `}>
                                                         {converetDate(day)}
-                                                    </small>
+                                                    </div>
                                                 </button >
                                             </div>
                                         )}
@@ -121,8 +120,8 @@ const CalenderExpert = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-1">
-                        </div>
+                        {/* <div className="col-1">
+                        </div> */}
 
                     </div>
                 </div>
