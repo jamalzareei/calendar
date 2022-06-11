@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import ScrollHorizontal from '../../components/Svg/ScrollHorizontal';
-
-
+import file from '../../data/data.json'
 
 const CalenderExpert = () => {
-
     const dateWeek = (countDay) => {
 
         var date = new Date();
@@ -17,12 +14,14 @@ const CalenderExpert = () => {
             "year": date.getFullYear(),
         }
     }
-    const [selectDay, setselectDay] = useState(dateWeek(0))
+
     const [start, setStart] = useState(0)
-    const [selectTimes, setSelectTimes] = useState([])
+    const [selectTimes, setSelectTimes] = useState(file)
+    const [online, setOnline] = useState(false)
 
 
-    let dayWeek = [
+
+    const dayWeek = [
         "Su",//"Sunday",
         "Mo",//"Monday",
         "Tu",//"Tuesday",
@@ -31,97 +30,128 @@ const CalenderExpert = () => {
         "Fr",//"Friday",
         "Sa",//"Saturday",
     ];
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
 
-    const onSelectDay = (day) => (e) => {
-        setselectDay(dateWeek(day))
-    }
     const numberRange = (start, end) => {
         return new Array(end - start + 1).fill().map((d, i) => i + start);
     }
 
     const changeWeek = (week, level) => (e) => {
         if (level === 'next') {
-            setStart(week + 1);
+            setStart(week + 7);
         } else {
-            setStart(week - 1);
+            setStart(week - 7);
         }
     }
 
 
-    const onSelectTimes = (time) => (e) => {
-        let newArray = selectTimes
-        if (newArray.includes(time)) {
-            newArray = newArray.filter(val => val !== time)
-        } else {
-            newArray = [ ...newArray, time];
+    const onSelectTimes = (date, time) => (e) => {
+        let newTime = {
+            "date": date,
+            "time": time,
+            "online": online,
         }
+        let newArray = selectTimes
+
+        if (onGetOldSelected(newTime) !== null) {
+            newArray = newArray.filter(v => !(v.date === newTime.date && v.time === newTime.time))// && v.online === newTime.online
+        } else {
+            newArray = [...newArray, newTime];
+        }
+
         setSelectTimes(newArray)
     }
 
-    const converetDate = (day) => {
-        return `${selectDay['year']}-${selectDay['month']}-${selectDay['day']} ${day}:00:00`
+    const onGetOldSelected = (data) => {
+
+        let newArray = selectTimes.filter(v => v.date === data.date && v.time === data.time)// && v.online === data.online
+
+        return newArray.length > 0 ? newArray[0].online : null
     }
+    const onGetOldSelectedOnline = (date, time) => {
+        let newArray = selectTimes.filter(v => v.date === date && v.time === time)
+        return newArray.length > 0 ? (newArray[0].online ? 'btn-secondary text-white online-rezerve' : 'btn-dark text-white presence-rezerve') : ''
+    }
+
 
     return (
         <div>
+            {console.log(selectTimes)}
             <div className="row">
-                <div className="col-md-12 offset-md-3-">
-                    <div className="row ">
+                <div className="col-md-4">
 
-                        <div className="d-flex justify-content-between" style={{ position: 'relative', whiteSpace: 'nowrap' }}>
-                            <div className="col-1 pb-1 d-flex align-items-lg-stretch justify-content-end">
-                                <button className="btn btn-outline-secondary text-nowrap" onClick={changeWeek(start, 'prev')}>
-                                    <span>&laquo;</span>
-                                </button>
-                            </div>
-                            <span className="help-scroll-user">
-                                <ScrollHorizontal />
-                            </span>
-                            <div className="col-10 scrollmenu pb-1 mx-1 d-flex align-items-center">
-                                {numberRange(start, start + 6).map((day, key) => // selectDay === day
-                                    <button key={key} className={`btn col mx-1 ${(JSON.stringify(selectDay) === JSON.stringify(dateWeek(day))) ? ' btn-primary  px-5 active' : ' btn-outline-secondary '}`} onClick={onSelectDay(day)}>
-                                        {dayWeek[dateWeek(day)['dayweek']]}
-                                        <br />
-                                        {`${dateWeek(day)['year']}-${dateWeek(day)['month']}-${dateWeek(day)['day']}`}
-                                    </button >
-                                )}
-                            </div>
-                            <div className="col-1 pb-1 d-flex align-items-lg-stretch justify-content-start">
-                                <button className="btn btn-outline-secondary text-nowrap" onClick={changeWeek(start, 'next')}>
-                                    <span>&raquo;</span>
-                                </button>
-                            </div>
-                        </div>
+                </div>
+                <div className="col-md-8">
 
-                    </div>
-
-                    <div className="row ">
-
-                        {/* <div className="col-1">
-                        </div> */}
-                        <div className="col-10 offset-1">
-                            <div className="card my-4 ">
-                                <h5 className="card-header bg-secondary  text-white">Select unreserved times</h5>
-                                <div className="card-body">
-                                    <div className="row">
-                                        {numberRange(8, 23).map((day, key) => // selectDay === day
-                                            <div key={key} className="col-md-3 col-sm-4 d-grid">
-
-                                                <button className={`btn my-2 btn-block  ${selectTimes.includes(converetDate(day)) ? 'btn-dark' : 'btn-outline-dark'}`} onClick={onSelectTimes(converetDate(day))}>
-                                                    <div className="fw-bold">{day}-{day + 1}</div>
-                                                    
-                                                    <div className={`${selectTimes.includes(converetDate(day)) ? '' : 'text-muted'}" small `}>
-                                                        {converetDate(day)}
-                                                    </div>
-                                                </button >
-                                            </div>
-                                        )}
-                                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="d-flex justify-content-between">
+                                <div className="col-1 pb-1 d-flex align-items-lg-stretch justify-content-end">
+                                    <button className="btn btn-outline-secondary text-nowrap" onClick={changeWeek(start, 'prev')}>
+                                        <span>&laquo;</span>
+                                    </button>
+                                </div>
+                                <div className="col-10 scrollmenu pb-1 mx-1 d-flex align-items-center justify-content-center">
+                                    {dateWeek(start)['year']} {dateWeek(start)['day']} {monthNames[Number(dateWeek(start)['month']) - 1]}({dateWeek(start)['month']})
+                                    -
+                                    {dateWeek(start + 7)['year']} {dateWeek(start + 7)['day']} {monthNames[Number(dateWeek(start + 7)['month']) - 1]}({dateWeek(start + 7)['month']})
+                                </div>
+                                <div className="col-1 pb-1 d-flex align-items-lg-stretch justify-content-start">
+                                    <button className="btn btn-outline-secondary text-nowrap" onClick={changeWeek(start, 'next')}>
+                                        <span>&raquo;</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        {/* <div className="col-1">
-                        </div> */}
+                    </div>
+
+                    <div className="card p-2">
+                        <div className="d-flex w-100 justify-content-between">
+                            {/* <h5 className="mb-1">Online</h5> */}
+                            <small className="col p-3">
+                                <div className="form-check form-switch">
+                                    <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" onChange={(e) => setOnline(!online)} checked={online} />
+                                    <label className="form-check-label" htmlFor="flexSwitchCheckChecked">
+                                        Activate the tick in case of online time
+                                        <br />
+                                        (  <span class="badge bg-secondary">&nbsp;</span> online <span class="badge bg-dark">&nbsp;</span> presence  )
+                                    </label>
+                                </div>
+                            </small>
+                            {/* <small className="col-2 p-3 text-right">
+                                <button className="btn btn-primary float-right">Save</button>
+                            </small> */}
+                        </div>
+                        <div className="d-flex m-2 pb-3 border-bottom">
+                            {numberRange(start, start + 6).map((day, key) =>
+                                <span key={key} className={`col text-center ${day === 0 ? "border-bottom border-4" : ""}`}>
+                                    {dayWeek[dateWeek(day)['dayweek']]}
+                                    <br />
+                                    <span className="small text-muted">{`${dateWeek(day)['month']}/${dateWeek(day)['day']}`}</span>
+                                </span >
+                            )}
+                        </div>
+                        <div className="d-flex">
+                            {numberRange(start, start + 6).map((day, key) =>
+                                <span key={key} className={`col pr-1 text-center `}>
+                                    {numberRange(8, 23).map((time, key) =>
+                                        <button key={key} className={
+                                            `btn border my-1 w-75 px-0 py-1 
+                                            ${onGetOldSelectedOnline(`${dateWeek(day)['year']}-${dateWeek(day)['month']}-${dateWeek(day)['day']}`, `${("0" + time).slice(-2)}:00:00`)}
+                                            `}
+                                            onClick={onSelectTimes(`${dateWeek(day)['year']}-${dateWeek(day)['month']}-${dateWeek(day)['day']}`, `${("0" + time).slice(-2)}:00:00`)}
+                                        >
+                                            {("0" + time).slice(-2)}
+                                        </button >
+                                    )}
+                                </span >
+                            )}
+                        </div>
+                        <div className="row p-3">
+                            <button className="btn btn-primary btn-block">Save Data</button>
+                        </div>
 
                     </div>
                 </div>
@@ -129,5 +159,6 @@ const CalenderExpert = () => {
         </div>
     );
 };
+
 
 export default CalenderExpert;

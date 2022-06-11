@@ -1,9 +1,9 @@
 import React from "react";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
 import Header from "../components/Header";
-import Calender from "../pages/calendar";
+// import Calender from "../pages/calendar";
+import CalenderClient from "../pages/calender-client";
 import CalenderExpert from "../pages/calender-expert";
-import CalenderExpertV2 from "../pages/calender-expert-2";
 import Home from "../pages/Home";
 
 export default function RouterMain() {
@@ -14,9 +14,9 @@ export default function RouterMain() {
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="calendar" element={<Calender />} />
+          {/* <Route path="calendar" element={<Calender />} /> */}
           <Route path="calendar-expert" element={<CalenderExpert />} />
-          <Route path="calendar-expert-v2" element={<CalenderExpertV2 />} />
+          <Route path="calendar-client" element={<CalenderClient />} />
         </Routes>
       </div>
     </BrowserRouter>

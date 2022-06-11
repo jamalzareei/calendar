@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import file from '../../data/data.json'
 
-const CalenderExpertV2 = () => {
+const CalenderClient = () => {
 
     const dateWeek = (countDay) => {
 
@@ -14,10 +15,10 @@ const CalenderExpertV2 = () => {
             "year": date.getFullYear(),
         }
     }
-    const [selectDay, setselectDay] = useState(dateWeek(0))
+    
     const [start, setStart] = useState(0)
-    const [selectTimes, setSelectTimes] = useState([])
-    const [itemSelect, setitemSelect] = useState([])
+    const [itemSelect, setitemSelect] = useState(null)
+    const selectTimes = file
 
     
 
@@ -34,43 +35,35 @@ const CalenderExpertV2 = () => {
         "July", "August", "September", "October", "November", "December"
     ];
 
-    const onSelectDay = (day) => (e) => {
-        setselectDay(dateWeek(day))
-    }
     const numberRange = (start, end) => {
         return new Array(end - start + 1).fill().map((d, i) => i + start);
     }
 
     const changeWeek = (week, level) => (e) => {
         if (level === 'next') {
-            setStart(week + 1);
+            setStart(week + 7);
         } else {
-            setStart(week - 1);
+            setStart(week - 7);
+        }
+    }
+
+    const selectItem = (date, time) => (e) => {
+        console.log(selectTimes.filter(v => v.date === date && v.time === time))
+        let s = selectTimes.filter(v => v.date === date && v.time === time)
+        if (s && s?.length > 0){
+            setitemSelect(s[0])
         }
     }
 
 
-    const onSelectTimes = (time) => (e) => {
-        let newArray = selectTimes
-        if (newArray.includes(time)) {
-            newArray = newArray.filter(val => val !== time)
-        } else {
-            newArray = [...newArray, time];
-        }
-        setSelectTimes(newArray)
-    }
-
-    const converetDate = (day) => {
-        return `${selectDay['year']}-${selectDay['month']}-${selectDay['day']} ${day}:00:00`
-    }
-
-    const selectItem = ([date, time]) => (e) => {
-        console.log(date);
-        setitemSelect([date, time])
+    const onGetOldSelectedOnline = (date, time) => {
+        let newArray = selectTimes.filter(v => v.date === date && v.time === time)
+        return newArray.length > 0 ? (newArray[0].online ? 'btn-secondary text-white online-rezerve' : 'btn-dark text-white presence-rezerve') : 'disabled'
     }
 
     return (
         <div>
+            {console.log(itemSelect)}
             <div className="row">
                 <div className="col-md-4">
 
@@ -99,6 +92,11 @@ const CalenderExpertV2 = () => {
                         </div>
                     </div>
                     <div className="card p-2">
+                        <div className="d-flex w-100 justify-content-between">
+                            <small className="col p-3">
+                                (  <span class="badge bg-secondary">&nbsp;</span> online <span class="badge bg-dark">&nbsp;</span> presence  )
+                            </small>
+                        </div>
                         <div className="d-flex m-2 pb-3 border-bottom">
                             {numberRange(start, start + 6).map((day, key) =>
                                 <span key={key} className={`col text-center ${day === 0 ? "border-bottom border-4" : ""}`}>
@@ -112,8 +110,13 @@ const CalenderExpertV2 = () => {
                             {numberRange(start, start + 6).map((day, key) =>
                                 <span key={key} className={`col pr-1 text-center `}>
                                     {numberRange(8, 23).map((time, key) =>
-                                        <button key={key} className={`btn btn-outline-secondary my-1 w-75 px-2 py-1 ${selectTimes.includes(converetDate(time)) ? 'btn-dark' : 'btn-outline-dark'}`} onClick={selectItem([`${dateWeek(day)['year']}-${dateWeek(day)['month']}-${dateWeek(day)['day']}`, `${("0" + time).slice(-2)}:00`])}>
-                                            {("0" + time).slice(-2)}:00
+                                        <button key={key} className={
+                                            `btn btn-outline-secondary my-1 w-75 px-0 py-1 
+                                            ${onGetOldSelectedOnline(`${dateWeek(day)['year']}-${dateWeek(day)['month']}-${dateWeek(day)['day']}`, `${("0" + time).slice(-2)}:00:00`)}
+                                            `}
+                                            onClick={selectItem(`${dateWeek(day)['year']}-${dateWeek(day)['month']}-${dateWeek(day)['day']}`, `${("0" + time).slice(-2)}:00:00`)}
+                                        >
+                                            {("0" + time).slice(-2)}
                                         </button >
                                     )}
                                 </span >
@@ -123,15 +126,15 @@ const CalenderExpertV2 = () => {
                     </div>
                 </div>
             </div>
-            {console.log(itemSelect)}
-            {itemSelect && itemSelect?.length > 0 &&
+            
+            {itemSelect &&
                 <>
                     <div className="modal fade show" id="exampleModalCenter" style={{ display: "block" }}>
                         <div className="modal-dialog modal-dialog-centered" style={{ zIndex: 1056 }}>
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalCenterTitle">Save Date</h5>
-                                    <button type="button" className="btn-close" onClick={() => setitemSelect([])}></button>
+                                    <button type="button" className="btn-close" onClick={() => setitemSelect(null)}></button>
                                 </div>
                                 <div className="modal-body">
                                     {/* <div className="card"> */}
@@ -139,13 +142,13 @@ const CalenderExpertV2 = () => {
                                         <li className="list-group-item d-flex justify-content-between align-items-center">
                                             <div className="d-flex w-100 justify-content-between">
                                                 <h5 className="mb-1">Date</h5>
-                                                <small>{itemSelect[0]}</small>
+                                                <small>{itemSelect?.date}</small>
                                             </div>
                                         </li>
                                         <li className="list-group-item d-flex justify-content-between align-items-center">
                                             <div className="d-flex w-100 justify-content-between">
                                                 <h5 className="mb-1">Time</h5>
-                                                <small>{itemSelect[1]}</small>
+                                                <small>{itemSelect?.time}</small>
                                             </div>
                                         </li>
                                         <li className="list-group-item d-flex justify-content-between align-items-center">
@@ -153,7 +156,7 @@ const CalenderExpertV2 = () => {
                                                 {/* <h5 className="mb-1">Online</h5> */}
                                                 <small>
                                                     <div className="form-check form-switch">
-                                                        <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" />
+                                                    <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked={itemSelect?.online} />
                                                         <label className="form-check-label" htmlFor="flexSwitchCheckChecked">Activate the tick in case of online time</label>
                                                     </div>
                                                 </small>
@@ -163,14 +166,14 @@ const CalenderExpertV2 = () => {
                                     {/* </div> */}
                                 </div>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-primary">Save Time</button>
+                                    <button type="button" className="btn btn-primary">Pay</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="modal-backdrop fade show" onClick={() => setitemSelect([])}></div>
-                    {/* <div class="close-modal-div-dark" onClick={() => setitemSelect([])} style={{ width: '100vw', height: '100vh', position: 'fixed', top: 0, background: 'rgb(0 0 0 / 42%)', left: 0, zIndex: 1 }}></div> */}
+                    <div className="modal-backdrop fade show" onClick={() => setitemSelect(null)}></div>
+                    {/* <div class="close-modal-div-dark" onClick={() => setitemSelect(null)} style={{ width: '100vw', height: '100vh', position: 'fixed', top: 0, background: 'rgb(0 0 0 / 42%)', left: 0, zIndex: 1 }}></div> */}
                 </>
             }
         </div>
@@ -178,4 +181,4 @@ const CalenderExpertV2 = () => {
 };
 
 
-export default CalenderExpertV2;
+export default CalenderClient;

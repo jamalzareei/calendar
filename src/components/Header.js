@@ -11,19 +11,19 @@ const Header = () => {
               Home
             </Link>
           </li>
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <Link className="nav-link" to="/calendar">
               Calendar
             </Link>
-          </li>
+          </li> */}
           <li className="nav-item">
             <Link className="nav-link" to="/calendar-expert">
-              Calendar Sell
+              Calendar Expert
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/calendar-expert-v2">
-              Calendar Sell v2
+            <Link className="nav-link" to="/calendar-client">
+              Calendar client
             </Link>
           </li>
         </ul>
